@@ -1,0 +1,44 @@
+name: Deploy Website to S3
+
+on:
+  push:
+    branches:
+      - main  # Trigger the deployment when you push to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use an Ubuntu runner
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up AWS CLI
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
+
+      # Step 3: Install dependencies (optional, if needed for your build)
+      #- name: Install dependencies
+      #  run: |
+      #   # Add your build steps here (e.g., if you're using npm or yarn)
+      #    # npm install or yarn install
+      #    # npm run build or yarn build
+      #    # This step can be skipped if you're just uploading static files
+
+      # Step 4: Sync the website files to S3
+      - name: Sync files to S3
+        run: |
+          aws s3 sync ./dist s3:meritestkliyebucket --delete --exact-timestamps
+        # Replace `./dist` with the path to your build folder, if different
+        # --delete ensures files that no longer exist are removed from S3
+        # --exact-timestamps ensures that files are only replaced if the content has changed
+
+      # Step 5: Set S3 bucket files to be publicly readable (optional, for static website)
+      - name: Make files publicly readable
+        run: |
+          aws s3 cp s3:meritestkliyebucket s3://meritestkliyebucket --recursive --acl public-read
