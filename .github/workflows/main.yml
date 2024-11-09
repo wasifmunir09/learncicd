@@ -42,4 +42,4 @@ jobs:
       # Step 5: Set S3 bucket files to be publicly readable (optional, for static website)
       - name: Make files publicly readable
         run: |
-          aws s3 cp s3://meritestkliyebucket s3://meritestkliyebucket --recursive --acl 
+          aws s3 cp s3://meritestkliyebucket s3://meritestkliyebucket --recursive --acl public-read
