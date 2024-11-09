@@ -33,7 +33,8 @@ jobs:
       # Step 4: Sync the website files to S3
       - name: Sync files to S3
         run: |
-          aws s3 sync ./dist s3:meritestkliyebucket --delete --exact-timestamps
+          aws s3 sync ./dist s3://meritestkliyebucket --delete --exact-timestamps
+
         # Replace `./dist` with the path to your build folder, if different
         # --delete ensures files that no longer exist are removed from S3
         # --exact-timestamps ensures that files are only replaced if the content has changed
@@ -41,4 +42,4 @@ jobs:
       # Step 5: Set S3 bucket files to be publicly readable (optional, for static website)
       - name: Make files publicly readable
         run: |
-          aws s3 cp s3:meritestkliyebucket s3://meritestkliyebucket --recursive --acl public-read
+          aws s3 cp s3://meritestkliyebucket s3://meritestkliyebucket --recursive --acl 
